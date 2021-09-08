@@ -40,8 +40,9 @@ const transform: AxiosTransform = {
       return res.data;
     }
     // 错误的时候返回
-
+    // 这里字段定义不一样，所以错误的判断也不一样...后面再重写了
     const { data } = res;
+    return data;
     if (!data) {
       // return '[HTTP] Request has no return value';
       throw new Error(t('sys.api.apiRequestFailed'));

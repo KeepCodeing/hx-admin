@@ -56,8 +56,9 @@
       });
 
       onMounted(async () => {
-        const data = await accountInfoApi();
-        setFieldsValue(data);
+        // console.log(userStore.userInfo);
+        // const data = await accountInfoApi();
+        setFieldsValue(userStore.userInfo);
       });
 
       const avatar = computed(() => {

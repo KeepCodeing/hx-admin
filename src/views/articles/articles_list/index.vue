@@ -4,7 +4,7 @@
       <a-row :gutter="12">
         <a-col :span="8" :class="`${prefixCls}__top-col`">
           <div>总计投稿</div>
-          <p>8</p>
+          <p>{{ store.total }}</p>
         </a-col>
         <a-col :span="8" :class="`${prefixCls}__top-col`">
           <div>通过投稿</div>
@@ -16,10 +16,9 @@
         </a-col>
       </a-row>
     </div>
-
     <div :class="`${prefixCls}__content`">
       <a-list :pagination="pagination">
-        <template v-for="item in list" :key="item.id">
+        <template v-for="(item, idx) in store.articleList" :key="item.id">
           <a-list-item class="list">
             <a-list-item-meta>
               <!-- <template #avatar>
@@ -33,14 +32,14 @@
               </template>
               <template #description>
                 <div class="description">
-                  {{ item.description }}
+                  {{ item.content.substr(0, 10) }}
                 </div>
                 <div class="info">
-                  <div><span>投稿者</span>{{ item.author }}</div>
-                  <div><span>投稿时间</span>{{ item.datetime }}</div>
+                  <div><span>投稿者</span>{{ item.authors }}</div>
+                  <div><span>投稿时间</span>{{ item.ctime }}</div>
                 </div>
                 <div class="progress info">
-                  <div><span>文章状态</span>待审核</div>
+                  <div><span>文章状态</span>{{ item.status }}</div>
                 </div>
                 <!-- <div class="progress">
                   <Progress :percent="item.percent" status="active" />
@@ -48,7 +47,9 @@
               </template>
             </a-list-item-meta>
             <template #actions>
-              <span @click="$router.push(`/articles/view/${item.id}`)" class="text-blue-400 cursor-pointer"
+              <span
+                @click="$router.push(`/articles/view/${idx}`)"
+                class="text-blue-400 cursor-pointer"
                 >审阅</span
               >
             </template>
@@ -65,6 +66,7 @@ import Icon from '/@/components/Icon/index';
 import { cardList } from './data';
 import { PageWrapper } from '/@/components/Page';
 import { List } from 'ant-design-vue';
+import { useArticleStore } from '/@/store/modules/article';
 
 export default defineComponent({
   components: {
@@ -78,6 +80,9 @@ export default defineComponent({
     [Col.name]: Col,
   },
   setup() {
+    const store = useArticleStore();
+    store.getArticleList();    
+
     return {
       prefixCls: 'list-basic',
       list: cardList,
@@ -85,6 +90,7 @@ export default defineComponent({
         show: true,
         pageSize: 3,
       },
+      store
     };
   },
 });

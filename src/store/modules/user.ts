@@ -21,6 +21,16 @@ interface UserState {
   roleList: RoleEnum[];
   sessionTimeout?: boolean;
   lastUpdateTime: number;
+  // account: string;
+  // accountId: string;
+  // email: string;
+  // id: number;
+  // nickname: string;
+  // name: string;
+  // phone: string;
+  // role: string;
+  // sign: string;
+  // token?: string;
 }
 
 export const useUserStore = defineStore({
@@ -36,6 +46,17 @@ export const useUserStore = defineStore({
     sessionTimeout: false,
     // Last fetch time
     lastUpdateTime: 0,
+    // account: "",
+    // accountId: "",
+    // email: "",
+    // id: 0,
+    // name: "",
+    // nickname: "",
+    // phone: "",
+    // role: "",
+    // sign: "",
+    // token: "",
+    // sessionTimeout: false,
   }),
   getters: {
     getUserInfo(): UserInfo {
@@ -90,9 +111,10 @@ export const useUserStore = defineStore({
         const { goHome = true, mode, ...loginParams } = params;
         const data = await loginApi(loginParams, mode);
         const { token } = data;
-
+        
         // save token
-        this.setToken(token);
+        this.setToken('Bearer ' + token);
+        console.log(token);
         // get user info
         const userInfo = await this.getUserInfoAction();
 
@@ -109,7 +131,8 @@ export const useUserStore = defineStore({
             router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw);
             permissionStore.setDynamicAddedRoute(true);
           }
-          await router.replace(userInfo.homePath || PageEnum.BASE_HOME);
+          // await router.replace(userInfo.homePath || PageEnum.BASE_HOME);
+          await router.replace('/article/list' || PageEnum.BASE_HOME);
         }
         return userInfo;
       } catch (error) {
